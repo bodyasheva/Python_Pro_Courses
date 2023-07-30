@@ -83,8 +83,8 @@ def review_dish(dish: str):
     return
 
 
-@app.route('/menu/search', methods=['GET', 'POST'])
-def search_by_menu(search: str):
+@app.route('/menu/search/<name>', methods=['GET', 'POST'])
+def search_by_menu(name: str):
     return
 
 
