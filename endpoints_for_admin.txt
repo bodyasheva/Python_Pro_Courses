@@ -1,0 +1,6 @@
+/admin/dishes[GET]
+/admin/<dish>[GET, POST, DELETE]
+/admin/orders[GET]
+/admin/order/<order_id>[GET, POST]
+/admin/<category>[GET, POST, DELETE]
+/admin/search/<name>[GET, POST]
