@@ -1,5 +1,8 @@
 from flask import Flask
 
+
+import sqlite3
+
 app = Flask(__name__)
 
 
@@ -20,7 +23,11 @@ def cart_add():
 
 @app.route('/user', methods=['GET', 'POST', 'DELETE'])
 def user():
-    return "This is the user page."
+    con = sqlite3.connect("dish.db")
+    new_cur = con.cursor()
+    res = new_cur.execute("SELECT * FROM User")
+    RESULT = res.fetchall()
+    return str(RESULT)
 
 
 @app.route('/user/register', methods=['POST'])
@@ -55,7 +62,11 @@ def user_order(order_id: int):
 
 @app.route('/user/address', methods=['GET', 'POST'])
 def user_address_list():
-    return "This is the address page."
+    con = sqlite3.connect("dish.db")
+    new_cur = con.cursor()
+    res = new_cur.execute("SELECT * FROM Address")
+    RESULT = res.fetchall()
+    return str(RESULT)
 
 
 @app.route('/user/address/<address_id>', methods=['GET', 'POST', 'DELETE'])
@@ -65,17 +76,29 @@ def user_address(address_id: int):
 
 @app.route('/menu', methods=['GET'])
 def menu():
-    return "This is the menu page."
+    con = sqlite3.connect("dish.db")
+    new_cur = con.cursor()
+    res = new_cur.execute("SELECT * FROM Dishes")
+    RESULT = res.fetchall()
+    return str(RESULT)
 
 
 @app.route('/menu/<category_menu>', methods=['GET'])
 def category(category_menu: str):
-    return "This is the category page."
+    con = sqlite3.connect("dish.db")
+    new_cur = con.cursor()
+    res = new_cur.execute("SELECT * FROM Category")
+    RESULT = res.fetchall()
+    return str(RESULT)
 
 
 @app.route('/menu/<category_menu>/<dish>', methods=['GET'])
 def get_dish(category_menu, dish: str):
-    return "This is the dish page in category."
+    con = sqlite3.connect("dish.db")
+    new_cur = con.cursor()
+    res = new_cur.execute("SELECT * FROM Dishes")
+    RESULT = res.fetchall()
+    return str(RESULT)
 
 
 @app.route('/menu/<category_menu>/<dish>/review', methods=['POST'])
@@ -86,6 +109,45 @@ def review_dish(category_menu, dish: str):
 @app.route('/menu/search/<name>', methods=['GET', 'POST'])
 def search_by_menu(name: str):
     return "This is the search page."
+
+
+@app.route('/admin/dishes', methods=['GET', 'POST'])
+def admin_dishes():
+    return "This is the list dishes page."
+
+
+@app.route('/admin/dishes/<dish>', methods=['GET', 'POST', 'DELETE'])
+def redaction_dishes(dish: str):
+    return "This is the list dish page."
+
+
+@app.route('/admin/orders', methods=['GET'])
+def admin_orders():
+    con = sqlite3.connect("dish.db")
+    new_cur = con.cursor()
+    res = new_cur.execute("SELECT * FROM Orders")
+    RESULT = res.fetchall()
+    return str(RESULT)
+
+
+@app.route('/admin/orders/<order_id>', methods=['GET', 'POST'])
+def admin_order(order_id: int):
+    return "This is the order page."
+
+
+@app.route('/admin/categories', methods=['GET', 'POST'])
+def admin_categories():
+    return "This is the categories page."
+
+
+@app.route('/admin/categories/<category_id>', methods=['DELETE'])
+def admin_category(category_id: str):
+    return "This is the category page."
+
+
+@app.route('/admin/search/<name>', methods=['DELETE'])
+def admin_search(name: str):
+    return "This is the dish or category page."
 
 
 if __name__ == "__main__":
