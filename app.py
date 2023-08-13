@@ -1,6 +1,7 @@
 from flask import Flask
+from flask import request
 
-
+from func import *
 import sqlite3
 
 app = Flask(__name__)
@@ -13,7 +14,14 @@ def cart():
 
 @app.route('/cart/order', methods=['POST'])
 def cart_order():
-    return "This is the order page."
+    with SQLiteDB("dish.db") as db:
+        if request.method == 'POST':
+            data = request.json
+            db.insert_into('Orders', data)
+
+        order = db.select_from(table_name='Orders', columns=['*'])
+
+    return str(order)
 
 
 @app.route('/cart/add', methods=['POST'])
@@ -23,11 +31,14 @@ def cart_add():
 
 @app.route('/user', methods=['GET', 'POST', 'DELETE'])
 def user():
-    con = sqlite3.connect("dish.db")
-    new_cur = con.cursor()
-    res = new_cur.execute("SELECT * FROM User")
-    RESULT = res.fetchall()
-    return str(RESULT)
+    with SQLiteDB("dish.db") as db:
+        if request.method == 'POST':
+            data = request.json
+            db.insert_into('User', data)
+
+        users = db.select_from(table_name='User', columns=['*'])
+
+    return str(users)
 
 
 @app.route('/user/register', methods=['POST'])
@@ -62,11 +73,14 @@ def user_order(order_id: int):
 
 @app.route('/user/address', methods=['GET', 'POST'])
 def user_address_list():
-    con = sqlite3.connect("dish.db")
-    new_cur = con.cursor()
-    res = new_cur.execute("SELECT * FROM Address")
-    RESULT = res.fetchall()
-    return str(RESULT)
+    with SQLiteDB("dish.db") as db:
+        if request.method == 'POST':
+            data = request.json
+            db.insert_into('Address', data)
+
+        address = db.select_from(table_name='Address', columns=['*'])
+
+    return str(address)
 
 
 @app.route('/user/address/<address_id>', methods=['GET', 'POST', 'DELETE'])
@@ -74,13 +88,16 @@ def user_address(address_id: int):
     return "This is the something address page."
 
 
-@app.route('/menu', methods=['GET'])
+@app.route('/menu', methods=['GET', 'POST'])
 def menu():
-    con = sqlite3.connect("dish.db")
-    new_cur = con.cursor()
-    res = new_cur.execute("SELECT * FROM Dishes")
-    RESULT = res.fetchall()
-    return str(RESULT)
+    with SQLiteDB("dish.db") as db:
+        if request.method == 'POST':
+            data = request.json
+            db.insert_into('Dishes', data)
+
+        dishes = db.select_from(table_name='Dishes', columns=['*'])
+
+    return str(dishes)
 
 
 @app.route('/menu/<category_menu>', methods=['GET'])
@@ -113,7 +130,14 @@ def search_by_menu(name: str):
 
 @app.route('/admin/dishes', methods=['GET', 'POST'])
 def admin_dishes():
-    return "This is the list dishes page."
+    with SQLiteDB("dish.db") as db:
+        if request.method == 'POST':
+            data = request.json
+            db.insert_into('Dishes', data)
+
+        dishes = db.select_from(table_name='Dishes', columns=['*'])
+
+    return str(dishes)
 
 
 @app.route('/admin/dishes/<dish>', methods=['GET', 'POST', 'DELETE'])
@@ -137,7 +161,14 @@ def admin_order(order_id: int):
 
 @app.route('/admin/categories', methods=['GET', 'POST'])
 def admin_categories():
-    return "This is the categories page."
+    with SQLiteDB("dish.db") as db:
+        if request.method == 'POST':
+            data = request.json
+            db.insert_into('Category', data)
+
+        dishes = db.select_from(table_name='Category', columns=['*'])
+
+    return str(dishes)
 
 
 @app.route('/admin/categories/<category_id>', methods=['DELETE'])
